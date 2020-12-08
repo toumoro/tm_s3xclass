@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'AWS S3 driver xclass',
-    'description' => 'Various s3 xclass',
+    'description' => 'This extension is an AWS S3 TYPO3 driver based on aus_driver_amazon_s3 that provides xclasses for metadata extraction, fileExists verification and it prefixes a slash on all objects.',
     'category' => 'plugin',
     'author' => 'Simon Ouellet',
     'author_email' => 'simon.ouellet@toumoro.com',
