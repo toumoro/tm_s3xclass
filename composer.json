@@ -1,0 +1,23 @@
+{
+    "name": "toumoro/tm-s3xclass",
+    "type": "typo3-cms-extension",
+    "description": "",
+    "authors": [],
+    "require": {
+        "typo3/cms-core": "^8.7.1 || ^9.5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Toumoro\\TmS3xclass\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Toumoro\\TmS3xclass\\Tests\\": "Tests"
+        }
+    },
+    "replace": {
+        "tm_s3xclass": "self.version",
+        "typo3-ter/tm-s3xclass": "self.version"
+    }
+}
