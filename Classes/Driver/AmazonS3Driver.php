@@ -81,16 +81,38 @@ class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
 
         return $targetIdentifier;
     }
-    
+
     /**
-     * @param string &$identifier
+     * Returns a path to a local copy of a file for processing it. When changing the
+     * file, you have to take care of replacing the current version yourself!
+     * The file will be removed by the driver automatically on destruction.
+     *
+     * @param string $fileIdentifier
+     * @param bool $writable Set this to FALSE if you only need the file for read
+     *                         operations. This might speed up things, e.g. by using
+     *                         a cached local version. Never modify the file if you
+     *                         have set this flag!
+     * @return string The path to the file on the local disk
+     * @throws \RuntimeException
+     * @todo take care of replacing the file on change
      */
-    protected function normalizeIdentifier(&$identifier)
+    public function getFileForLocalProcessing($fileIdentifier, $writable = true)
     {
-        $identifier = str_replace('//', '/', $identifier);
-        if ($identifier !== '/') {
-            $identifier = ltrim($identifier, '/');
+        $temporaryPath = $this->getTemporaryPathForFile($fileIdentifier);
+        $this->normalizeIdentifier($fileIdentifier);
+        $this->s3Client->getObject([
+            'Bucket' => $this->configuration['bucket'],
+            'Key' => $fileIdentifier,
+            'SaveAs' => $temporaryPath,
+        ]);
+        if (!is_file($temporaryPath)) {
+            throw new \RuntimeException('Copying file ' . $fileIdentifier . ' to temporary path failed.', 1320577649);
         }
+        $this->emitGetFileForLocalProcessingSignal($fileIdentifier, $temporaryPath, $writable);
+        if (!isset($this->temporaryPaths[$temporaryPath])) {
+            $this->temporaryPaths[$temporaryPath] = $temporaryPath;
+        }
+        return $temporaryPath;
     }
 
    /**
