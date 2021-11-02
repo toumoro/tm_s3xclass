@@ -15,9 +15,5 @@
         "psr-4": {
             "Toumoro\\TmS3xclass\\Tests\\": "Tests"
         }
-    },
-    "replace": {
-        "tm_s3xclass": "self.version",
-        "typo3-ter/tm-s3xclass": "self.version"
     }
 }
