@@ -19,10 +19,11 @@ class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
     public function getPublicUrl($identifier)
     {
         $this->getStorage();
-        $timeHash = $this->storage->getFile($identifier)->getModificationTime();
+        //$timeHash = $this->storage->getFile($identifier)->getModificationTime();
+        $timeHash = '';
         $uriParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('/', ltrim($identifier, '/'), true);
         $uriParts = array_map('rawurlencode', $uriParts);
-        return $this->baseUrl . '/' . implode('/', $uriParts).'?'.$timeHash;
+        return $this->baseUrl . '/' . implode('/', $uriParts);
     }
     
     /**
