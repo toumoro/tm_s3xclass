@@ -1,7 +1,7 @@
 <?php
 namespace Toumoro\TmS3xclass\Driver;
 
-
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Class AmazonS3Driver
  * Driver for Amazon Simple Storage Service (S3)
@@ -21,7 +21,7 @@ class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
         $this->getStorage();
         //$timeHash = $this->storage->getFile($identifier)->getModificationTime();
         $timeHash = '';
-        $uriParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('/', ltrim($identifier, '/'), true);
+        $uriParts = GeneralUtility::trimExplode('/', ltrim($identifier, '/'), true);
         $uriParts = array_map('rawurlencode', $uriParts);
         return $this->baseUrl . '/' . implode('/', $uriParts);
     }

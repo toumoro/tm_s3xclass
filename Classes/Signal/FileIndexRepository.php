@@ -12,7 +12,8 @@ namespace Toumoro\TmS3xclass\Signal;
  * Stefan Lamm <s.lamm@andersundsehr.com>, anders und sehr GmbH
  *
  ***/
-
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor;
 use AUS\AusDriverAmazonS3\Driver\AmazonS3Driver;
 use AUS\AusDriverAmazonS3\Index\Extractor;
 use TYPO3\CMS\Core\Resource\File;
@@ -57,7 +58,7 @@ class FileIndexRepository extends \AUS\AusDriverAmazonS3\Signal\FileIndexReposit
                 $metaData['height'] = $imageDimensions[1];
                 $metaDataRepository->update($data['uid'], $metaData);
             }
-        } else if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tika')) {
+        } else if (ExtensionManagementUtility::isLoaded('tika')) {
           //exit("test");
           if ($data['type'] > 0) {
             $storage = $this->getStorage($data['storage']);
@@ -72,7 +73,7 @@ class FileIndexRepository extends \AUS\AusDriverAmazonS3\Signal\FileIndexReposit
           //  if ($storage->fileExists($data['identifier'])) {
             $file = $storage->getFile($data['identifier']);
           //  var_dump($file);exit();
-              $extractor = GeneralUtility::makeInstance(\ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor::class);
+              $extractor = GeneralUtility::makeInstance(MetaDataExtractor::class);
 
                 if ($extractor->canProcess($file)) {
                   $extractedMetadata = $extractor->extractMetaData($file);

@@ -12,7 +12,8 @@ namespace Toumoro\TmS3xclass\Index;
  * Stefan Lamm <s.lamm@andersundsehr.com>, anders und sehr GmbH
  *
  ***/
-
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor;
 use AUS\AusDriverAmazonS3\Driver\AmazonS3Driver;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileInterface;
@@ -50,10 +51,10 @@ class Extractor extends \AUS\AusDriverAmazonS3\Index\Extractor
      */
     public function canProcess(File $file)
     {
-        if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tika')) {
+        if (!ExtensionManagementUtility::isLoaded('tika')) {
           return $file->getType() == File::FILETYPE_IMAGE && $file->getStorage()->getDriverType() === AmazonS3Driver::DRIVER_TYPE;
         } else {
-            $extractor = GeneralUtility::makeInstance(\ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor::class);
+            $extractor = GeneralUtility::makeInstance(MetaDataExtractor::class);
             return $extractor->canProcess($file);
         }
     }
@@ -77,7 +78,7 @@ class Extractor extends \AUS\AusDriverAmazonS3\Index\Extractor
                   $previousExtractedData['height'] = $imageDimensions[1];
               }
           }
-        }  else if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tika')) {
+        }  else if (ExtensionManagementUtility::isLoaded('tika')) {
           //exit("test");
           if ($file->getType() > 0) {
             $storage = $file->getStorage();
@@ -87,7 +88,7 @@ class Extractor extends \AUS\AusDriverAmazonS3\Index\Extractor
                 return null;
             }
           //  var_dump($file);exit();
-              $extractor = GeneralUtility::makeInstance(\ApacheSolrForTypo3\Tika\Service\Extractor\MetaDataExtractor::class);
+              $extractor = GeneralUtility::makeInstance(MetaDataExtractor::class);
 
                 if ($extractor->canProcess($file)) {
                   $extractedMetadata = $extractor->extractMetaData($file);
