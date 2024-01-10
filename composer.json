@@ -4,7 +4,7 @@
     "description": "This is extension used to add some option to aus_driver_amazon_s3 extension",
     "authors": [],
     "require": {
-        "typo3/cms-core": "^8.7.1 || ^9.5.0 || ^10.4.0 || ^11.5 || ^12.4"
+        "typo3/cms-core": "^12.4"
     },
     "autoload": {
         "psr-4": {
