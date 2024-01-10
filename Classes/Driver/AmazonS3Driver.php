@@ -1,7 +1,11 @@
 <?php
 namespace Toumoro\TmS3xclass\Driver;
 
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
+use AUS\AusDriverAmazonS3\Event\GetFileForLocalProcessingEvent;
+
 /**
  * Class AmazonS3Driver
  * Driver for Amazon Simple Storage Service (S3)
@@ -11,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
 {
-    
+
     /**
      * @param string $identifier
      * @return string
@@ -19,13 +23,11 @@ class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
     public function getPublicUrl($identifier)
     {
         $this->getStorage();
-        //$timeHash = $this->storage->getFile($identifier)->getModificationTime();
-        $timeHash = '';
         $uriParts = GeneralUtility::trimExplode('/', ltrim($identifier, '/'), true);
         $uriParts = array_map('rawurlencode', $uriParts);
         return $this->baseUrl . '/' . implode('/', $uriParts);
     }
-    
+
     /**
      * Checks if a folder exists
      *
@@ -40,8 +42,7 @@ class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
         if (substr($identifier, -1) !== '/') {
             $identifier .= '/';
         }
-        return true;
-        return $this->objectExists($identifier);
+        return $this->prefixExists($identifier);
     }
 
     /**
@@ -51,6 +52,7 @@ class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
      * @param bool $removeOriginal if set the original file will be removed
      *                                after successful operation
      * @return string the identifier of the new file
+     * @throws \Exception
      */
     public function addFile($localFilePath, $targetFolderIdentifier, $newFileName = '', $removeOriginal = true)
     {
@@ -109,7 +111,12 @@ class AmazonS3Driver extends \AUS\AusDriverAmazonS3\Driver\AmazonS3Driver
         if (!is_file($temporaryPath)) {
             throw new \RuntimeException('Copying file ' . $fileIdentifier . ' to temporary path failed.', 1320577649);
         }
-        $this->emitGetFileForLocalProcessingSignal($fileIdentifier, $temporaryPath, $writable);
+        /** @var GetFileForLocalProcessingEvent $event */
+        $event = $this->eventDispatcher->dispatch(
+            new GetFileForLocalProcessingEvent($fileIdentifier, $temporaryPath, $writable)
+        );
+        $temporaryPath = $event->getTemporaryPath();
+
         if (!isset($this->temporaryPaths[$temporaryPath])) {
             $this->temporaryPaths[$temporaryPath] = $temporaryPath;
         }
