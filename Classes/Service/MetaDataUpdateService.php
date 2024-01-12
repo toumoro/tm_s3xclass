@@ -44,12 +44,16 @@ class MetaDataUpdateService extends \AUS\AusDriverAmazonS3\Service\MetaDataUpdat
             $file = $storage->getFile($fileProperties['identifier']);
             $imageDimensions = $this->getExtractor()->getImageDimensionsOfRemoteFile($file);
 
-            if ($imageDimensions !== null) {
-                $metaDataRepository = $this->getMetaDataRepository();
-                $metaData = $metaDataRepository->findByFileUid($fileProperties['uid']);
+            $metaDataRepository = $this->getMetaDataRepository();
+            $metaData = $metaDataRepository->findByFileUid($fileProperties['uid']);
 
-                $metaData['width'] = $imageDimensions[0];
-                $metaData['height'] = $imageDimensions[1];
+            $create = count($metaData) === 0;
+            $metaData['width'] = $imageDimensions[0];
+            $metaData['height'] = $imageDimensions[1];
+
+            if ($create) {
+                $metaDataRepository->createMetaDataRecord($fileProperties['uid'], $metaData);
+            } else {
                 $metaDataRepository->update($fileProperties['uid'], $metaData);
             }
         } else if (ExtensionManagementUtility::isLoaded('tika')) {
@@ -68,7 +72,12 @@ class MetaDataUpdateService extends \AUS\AusDriverAmazonS3\Service\MetaDataUpdat
                     $extractedMetadata = $extractor->extractMetaData($file);
                     if (!empty($extractedMetadata)) {
                         $metaDataRepository = $this->getMetaDataRepository();
-                        $metaDataRepository->update($fileProperties['uid'], $extractedMetadata);
+                        $metaData = $metaDataRepository->findByFileUid($fileProperties['uid']);
+                        if(count($metaData) === 0){
+                            $metaDataRepository->createMetaDataRecord($fileProperties['uid'], $extractedMetadata);
+                        }else{
+                            $metaDataRepository->update($fileProperties['uid'], $extractedMetadata);
+                        }
                     }
                 }
             }

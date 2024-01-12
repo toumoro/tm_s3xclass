@@ -1,7 +1,6 @@
 <?php
 namespace Toumoro\TmS3xclass\Driver;
 
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use AUS\AusDriverAmazonS3\Event\GetFileForLocalProcessingEvent;
