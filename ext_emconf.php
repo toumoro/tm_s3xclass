@@ -16,14 +16,11 @@ $EM_CONF[$_EXTKEY] = [
     'category' => 'plugin',
     'author' => 'Simon Ouellet',
     'author_email' => 'simon.ouellet@toumoro.com',
-    'state' => 'alpha',
-    'uploadfolder' => 0,
-    'createDirs' => '',
-    'clearCacheOnLoad' => 0,
-    'version' => '1.7.2',
+    'state' => 'beta',
+    'version' => '2.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '8.7.0-11.5.99',
+            'typo3' => '12.0.0-12.4.99',
             'aus_driver_amazon_s3' => '*'
         ],
         'conflicts' => [],

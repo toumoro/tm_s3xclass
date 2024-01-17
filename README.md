@@ -1,3 +1,10 @@
 # TYPO3 Extension tm_s3xclass
 
-This extension is an AWS S3 TYPO3 driver based on aus_driver_amazon_s3 that provides xclasses for metadata extraction, fileExists verification and it prefixes a slash on all objects.
+## Usage
+
+This extension is an extension based on aus_driver_amazon_s3 to manage AWS S3 Typo3 driver
+that provides classes with some extra functionality:
+* metadata extraction
+* fileExists verification
+* prefixes a slash on all objects
+* allow Tika to extract all metadata from picture when we upload documents

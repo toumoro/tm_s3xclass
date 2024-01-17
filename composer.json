@@ -1,10 +1,10 @@
 {
     "name": "toumoro/tm-s3xclass",
     "type": "typo3-cms-extension",
-    "description": "",
+    "description": "This is extension used to add some option to aus_driver_amazon_s3 extension",
     "authors": [],
     "require": {
-        "typo3/cms-core": "^8.7.1 || ^9.5.0 || ^10.4.0 || ^11.5"
+        "typo3/cms-core": "^12.4"
     },
     "autoload": {
         "psr-4": {
@@ -15,5 +15,10 @@
         "psr-4": {
             "Toumoro\\TmS3xclass\\Tests\\": "Tests"
         }
-    }
+    },
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "tm_s3xclass"
+		}
+	}
 }
